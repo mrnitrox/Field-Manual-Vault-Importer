@@ -376,6 +376,10 @@ public partial class MainWindow : Window
 
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
 
+    private void Help_Click(object sender, RoutedEventArgs e) => InfoWindow.ShowHelp(this);
+
+    private void About_Click(object sender, RoutedEventArgs e) => InfoWindow.ShowAbout(this);
+
     protected override void OnClosed(EventArgs e)
     {
         base.OnClosed(e);
