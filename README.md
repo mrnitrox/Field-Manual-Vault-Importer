@@ -36,3 +36,10 @@ gives `publish\FieldManualVaultImporter.exe`, a single self-contained file (no .
 
 The site's pages are read as a visitor reads them: robots.txt allows them and disallows the data endpoints
 (`/api/`, `__data.json`), which aren't used.
+
+## License
+
+[MIT](LICENSE). The exe also contains the .NET runtime and the WebView2 SDK, under their own licenses: see
+[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
+
+Not affiliated with T.REX ARMS. The publications are U.S. government works in the public domain.
