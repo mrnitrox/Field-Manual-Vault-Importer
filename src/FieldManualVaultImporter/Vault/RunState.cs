@@ -33,7 +33,7 @@ public enum RunPhase { Catalog, Download, Done }
 
 /// <summary>
 /// Everything a run needs to carry on after a pause, a crash or a power cut: the choices, the catalog read from the
-/// site and the phase. Saved as vault-download.json in the "Field Manual Vault" folder, so it travels with the files.
+/// site and the phase. Saved as vault-download.json in the destination folder, so it travels with the files.
 /// Which files are downloaded isn't stored: a file is done when it's on disk under its final name (it's written as
 /// .part and renamed only when complete).
 /// </summary>
@@ -42,7 +42,7 @@ public sealed class RunState
     public const string FileName = "vault-download.json";
 
     public int Version { get; set; } = 1;
-    /// <summary>The "Field Manual Vault" folder; files go to &lt;Root&gt;\&lt;Branch&gt;\&lt;Type&gt;\.</summary>
+    /// <summary>The destination folder; files go to &lt;Root&gt;\&lt;Branch&gt;\&lt;Type&gt;\.</summary>
     public string Root { get; set; } = "";
     public List<string> Collections { get; set; } = new();
     /// <summary>The file types to download: PDF, EPUB or both.</summary>

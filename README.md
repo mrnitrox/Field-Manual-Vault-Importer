@@ -4,7 +4,7 @@ A one-window Windows program that downloads the public-domain military publicati
 [T.REX ARMS Field Manual Vault](https://www.trex-arms.com/field-manual-vault) to a folder of your choice:
 
 ```
-<folder>\Field Manual Vault\<Branch>\<Type>\<Designation> <Title> (<Year>).pdf / .epub
+<folder>\<Branch>\<Type>\<Designation> <Title> (<Year>).pdf / .epub
 ```
 
 ## Using it
@@ -15,7 +15,7 @@ A one-window Windows program that downloads the public-domain military publicati
 3. Pause / Resume and Cancel at any time. After a crash or a power cut, choosing the same folder offers to resume:
    finished files are kept, a partial file continues from where it stopped.
 
-Progress is kept in `vault-download.json` in the `Field Manual Vault` folder, so it travels with the files.
+Progress is kept in `vault-download.json` in the destination folder, so it travels with the files.
 
 ## Cloudflare checks
 

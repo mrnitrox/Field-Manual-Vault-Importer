@@ -14,7 +14,6 @@ namespace FieldManualVaultImporter;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const string VaultFolder = "Field Manual Vault";
     private static readonly string SettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FieldManualVaultImporter", "settings.json");
 
@@ -84,19 +83,16 @@ public partial class MainWindow : Window
 
     // ------------------------------------------------------------------ choices
 
-    private string Root => Path.Combine(Destination.Text.Trim(), VaultFolder);
+    private string Root => Destination.Text.Trim();
 
     private bool HasDestination => Destination.Text.Trim() is { Length: > 0 } d && Path.IsPathFullyQualified(d);
 
     private void BrowseDestination_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new OpenFolderDialog { Title = "Where should the Field Manual Vault folder go?" };
+        var dialog = new OpenFolderDialog { Title = "Where should the files go?" };
         if (HasDestination && Directory.Exists(Destination.Text.Trim())) dialog.InitialDirectory = Destination.Text.Trim();
         if (dialog.ShowDialog(this) != true) return;
-        // Picking the "Field Manual Vault" folder itself means its parent.
-        var folder = dialog.FolderName;
-        if (string.Equals(Path.GetFileName(folder.TrimEnd('\\')), VaultFolder, StringComparison.OrdinalIgnoreCase)) folder = Path.GetDirectoryName(folder.TrimEnd('\\'))!;
-        Destination.Text = folder;
+        Destination.Text = dialog.FolderName;
         DestinationChanged();
     }
 
@@ -106,7 +102,7 @@ public partial class MainWindow : Window
     {
         if (!HasDestination)
         {
-            DestinationHint.Text = "Choose a folder: the files go to <folder>\\Field Manual Vault\\<Branch>\\<Type>\\";
+            DestinationHint.Text = "Choose a folder: the files go to <folder>\\<Branch>\\<Type>\\";
             Banner.Visibility = Visibility.Collapsed;
             return;
         }
@@ -117,7 +113,7 @@ public partial class MainWindow : Window
             if (drive.IsReady) free = $" · {VaultRunner.Size(drive.AvailableFreeSpace)} free";
         }
         catch (Exception e) when (e is ArgumentException or IOException or UnauthorizedAccessException) { }
-        DestinationHint.Text = $"Files go to {Root}\\<Branch>\\<Type>\\{free}";
+        DestinationHint.Text = $"Files go to {Path.Combine(Root, "<Branch>", "<Type>")}\\{free}";
         CheckUnfinished();
     }
 

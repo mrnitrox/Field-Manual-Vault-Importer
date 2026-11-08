@@ -95,7 +95,7 @@ public sealed class InfoWindow : Window
     public static void ShowHelp(Window owner)
     {
         var w = new InfoWindow(owner, "Help", "How to use it", null);
-        w.Step(1, "Destination.", "Browse… to a folder with enough free space. The files go to <folder>\\Field Manual Vault\\<Branch>\\<Type>\\.");
+        w.Step(1, "Destination.", "Browse… to a folder with enough free space. The files go to <folder>\\<Branch>\\<Type>\\.");
         w.Step(2, "Collections.", "Open the list and tick the collections you want: Current Doctrine, Recent Archive, Lessons Learned, Historic.");
         w.Step(3, "File types.", "Tick PDF (the original document), EPUB (reflowing text for phones and e-readers) or both.");
         w.Step(4, "Start.", "First the catalog is read, about one page a second (roughly 45 minutes for 2,600 publications); the total size "
@@ -104,7 +104,7 @@ public sealed class InfoWindow : Window
                                             + "It's safe to close the program: the next time, choose the same folder and click \"Resume it\".");
         w.Step(6, "Browser check.", "If the site asks for one, click \"Open the site to verify\", complete the check in the window that "
                                     + "opens, and the download continues by itself.");
-        w.Paragraph("Don't delete vault-download.json or the .part files in the Field Manual Vault folder while a run is unfinished: they "
+        w.Paragraph("Don't delete vault-download.json or the .part files in the destination folder while a run is unfinished: they "
                     + "are how it resumes.", muted: true);
         w.ShowDialog();
     }
