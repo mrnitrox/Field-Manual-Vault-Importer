@@ -1,0 +1,132 @@
+<Window x:Class="FieldManualVaultImporter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Field Manual Vault Importer" Width="760" Height="680" MinWidth="640" MinHeight="560"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource Bg}" FontSize="13"
+        Icon="pack://application:,,,/FieldManualVaultImporter;component/Assets/app.png">
+    <DockPanel Background="{StaticResource Bg}">
+        <!-- footer -->
+        <Border DockPanel.Dock="Bottom" Background="{StaticResource Bg.Chrome}" BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0" Padding="16,10">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button x:Name="VerifyButton" Content="Open the site to verify" Style="{StaticResource Primary}" Click="Verify_Click" Margin="0,0,8,0" Visibility="Collapsed" />
+                    <Button x:Name="StartButton" Content="Start" Style="{StaticResource Primary}" Click="Start_Click" Margin="0,0,8,0" />
+                    <Button x:Name="PauseButton" Content="Pause" Click="Pause_Click" Margin="0,0,8,0" IsEnabled="False" />
+                    <Button x:Name="CancelButton" Content="Cancel" Click="Cancel_Click" Margin="0,0,8,0" IsEnabled="False" />
+                    <Button Content="Close" Click="Close_Click" />
+                </StackPanel>
+                <TextBlock x:Name="Footer" Style="{StaticResource Muted}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                           Text="Progress is saved after every file" />
+            </DockPanel>
+        </Border>
+
+        <Grid Margin="16,14,16,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- unfinished run -->
+            <Border x:Name="Banner" Grid.Row="0" Background="{StaticResource Warning.Bg}" CornerRadius="6" Padding="12,8" Margin="0,0,0,12" Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock x:Name="BannerText" Foreground="{StaticResource Warning.Fg}" TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <Button Content="Resume it" Style="{StaticResource Link}" Click="Resume_Click" Margin="0,0,16,0" />
+                        <Button Content="Start over" Style="{StaticResource Link}" Click="StartOver_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- choices -->
+            <Grid x:Name="Choices" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="96" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Destination" Foreground="{StaticResource Fg.Muted}" VerticalAlignment="Center" />
+                <TextBox x:Name="Destination" Grid.Column="1" LostFocus="Destination_LostFocus" />
+                <Button Grid.Column="2" Content="Browse…" Margin="8,0,0,0" Click="BrowseDestination_Click" />
+                <TextBlock x:Name="DestinationHint" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource Muted}" Margin="0,4,0,12" TextWrapping="Wrap" />
+
+                <TextBlock Grid.Row="2" Text="Collections" Foreground="{StaticResource Fg.Muted}" VerticalAlignment="Center" />
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <ToggleButton x:Name="CollectionsToggle" HorizontalContentAlignment="Stretch" Padding="8,5" Background="{StaticResource Bg.Field}"
+                                  BorderBrush="{StaticResource Border}" Foreground="{StaticResource Fg}">
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Right" Text="&#xE70D;" FontFamily="Segoe MDL2 Assets" FontSize="10" VerticalAlignment="Center" />
+                                        <ContentPresenter VerticalAlignment="Center" />
+                                    </DockPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                        <TextBlock x:Name="CollectionsSummary" />
+                    </ToggleButton>
+                    <Popup IsOpen="{Binding IsChecked, ElementName=CollectionsToggle}" PlacementTarget="{Binding ElementName=CollectionsToggle}"
+                           Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                           Width="{Binding ActualWidth, ElementName=CollectionsToggle}" Closed="CollectionsPopup_Closed">
+                        <Border Background="{StaticResource Bg.Chrome}" BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="4" Padding="4" Margin="0,2,0,0">
+                            <StackPanel x:Name="CollectionsList" />
+                        </Border>
+                    </Popup>
+                </Grid>
+                <TextBlock x:Name="CollectionsHint" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource Muted}" Margin="0,4,0,12"
+                           Text="The total size is known once the catalog is read (the first stage)" />
+
+                <TextBlock Grid.Row="4" Text="File types" Foreground="{StaticResource Fg.Muted}" VerticalAlignment="Top" Margin="0,2,0,0" />
+                <StackPanel x:Name="FormatsList" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
+                <TextBlock x:Name="FormatsHint" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource Muted}" Margin="0,4,0,0" TextWrapping="Wrap" />
+            </Grid>
+
+            <Border Grid.Row="2" BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0" Margin="0,12,0,12" />
+
+            <!-- progress -->
+            <UniformGrid Grid.Row="3" Columns="4" Margin="0,0,-8,12">
+                <Border Style="{StaticResource Tile}">
+                    <StackPanel><TextBlock Text="Manuals" Style="{StaticResource Muted}" /><TextBlock x:Name="ManualsText" Text="—" FontSize="17" FontWeight="SemiBold" /></StackPanel>
+                </Border>
+                <Border Style="{StaticResource Tile}">
+                    <StackPanel><TextBlock Text="Files" Style="{StaticResource Muted}" /><TextBlock x:Name="FilesText" Text="—" FontSize="17" FontWeight="SemiBold" /></StackPanel>
+                </Border>
+                <Border Style="{StaticResource Tile}">
+                    <StackPanel><TextBlock Text="Downloaded" Style="{StaticResource Muted}" /><TextBlock x:Name="BytesText" Text="—" FontSize="17" FontWeight="SemiBold" /></StackPanel>
+                </Border>
+                <Border Style="{StaticResource Tile}">
+                    <StackPanel><TextBlock Text="Time left" Style="{StaticResource Muted}" /><TextBlock x:Name="TimeText" Text="—" FontSize="17" FontWeight="SemiBold" /></StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <StackPanel Grid.Row="4">
+                <DockPanel Margin="0,0,0,4">
+                    <TextBlock x:Name="OverallPercent" DockPanel.Dock="Right" Style="{StaticResource Muted}" />
+                    <TextBlock x:Name="StageText" Text="1. Catalog · 2. Download" TextTrimming="CharacterEllipsis" />
+                </DockPanel>
+                <ProgressBar x:Name="OverallBar" Margin="0,0,0,10" />
+                <DockPanel Margin="0,0,0,4">
+                    <TextBlock x:Name="CurrentPercent" DockPanel.Dock="Right" Style="{StaticResource Muted}" />
+                    <TextBlock x:Name="CurrentText" Text="Ready to start" Style="{StaticResource Muted}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                </DockPanel>
+                <ProgressBar x:Name="CurrentBar" Margin="0,0,0,12" />
+            </StackPanel>
+
+            <ListBox x:Name="LogList" Grid.Row="5" Background="{StaticResource Bg.Chrome}" BorderThickness="0" Foreground="{StaticResource Fg.Muted}"
+                     FontFamily="Consolas" FontSize="12" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="4" />
+        </Grid>
+    </DockPanel>
+</Window>
